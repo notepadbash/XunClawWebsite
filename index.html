@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XunClaw | 绒玻璃</title>
+    <title>XunClaw</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,6 @@
                 radial‑gradient(circle at 15% 12%, rgba(90,130,255,0.12) 0%, transparent 32%),
                 radial‑gradient(circle at 85% 75%, rgba(70,110,220,0.09) 0%, transparent 35%);
         }
-        /* 绒玻璃毛玻璃导航栏 */
         header {
             position: sticky;
             top: 0;
@@ -194,7 +193,7 @@
 </head>
 <body>
     <header>
-        <div class="logo‑title">Xun<span>Claw</span> · 绒玻璃</div>
+        <div class="logo‑title">Xun<span>Claw</div>
         <a class="download‑btn‑header" href="https://xcsyweb.pages.dev/XunClawInstall1.0.exe">64下载</a>
     </header>
 
@@ -221,7 +220,8 @@
                 <a class="btn‑exe" href="https://xcsyweb.pages.dev/XunClawInstall1.0.exe">下载 EXE 安装包</a>
                 <div class="cmd‑box">
                     <div class="cmd‑label">CMD一键部署命令（点击复制）</div>
-                    <div class="cmd‑code" id="cmdText">powershell -Command "Invoke‑WebRequest -Uri 'https://xcsyweb.pages.dev/XunClawInstall1.0.exe' -OutFile '$env:TEMP\XunClawInstall1.0.exe'; Start‑Process '$env:TEMP\XunClawInstall1.0.exe'"</div>
+                    <div class="cmd‑code" id="cmdText">curl "https://xcsyweb.pages.dev/XunClawInstall1.0.exe" -o %USERPROFILE%\Downloads\XunClawInstall1.0.exe && start %USERPROFILE%\Downloads\XunClawInstall1.0.exe
+</div>
                     <button class="copy‑btn" id="copyBtn" onclick="copyCmd()">复制</button>
                 </div>
             </div>
