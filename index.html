@@ -1,1 +1,183 @@
-<h1>你好<h1>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XunClaw | 绒玻璃</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #121217;
+            color: #e8e8ef;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-image: radial-gradient(circle at 20% 10%, #202842 0%, transparent 45%),
+            radial-gradient(circle at 80% 70%, #1a2438 0%, transparent 45%);
+            min-height: 100vh;
+        }
+        /* 绒玻璃毛玻璃导航栏 */
+        header {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 40px;
+            background: rgba(18, 18, 23, 0.42);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .logo-title {
+            font-size: 24px;
+            font-weight: 700;
+            color:#ffffff;
+        }
+        .logo-title span {
+            color:#86a8ff;
+        }
+        .download-btn-header {
+            padding: 10px 22px;
+            background-color:#406bff;
+            color:#fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.25s;
+        }
+        .download-btn-header:hover {
+            background-color:#2b52dd;
+        }
+        main {
+            padding:70px 40px;
+            max-width:780px;
+            margin:0 auto;
+        }
+        h1 {
+            font-size:44px;
+            margin-bottom:14px;
+            text-align:center;
+        }
+        .sub-desc {
+            color:#a9a9b8;
+            font-size:17px;
+            text-align:center;
+            margin-bottom:48px;
+            line-height:1.6;
+        }
+        .section-title{
+            font-size:20px;
+            margin:36px 0 14px;
+            color:#fff;
+        }
+        .intro-block{
+            color:#c2c2d4;
+            line-height:1.75;
+        }
+        .intro-block ul{
+            padding-left:22px;
+            margin:12px 0;
+        }
+        .download-wrap{
+            display:flex;
+            gap:16px;
+            flex-wrap:wrap;
+            margin:30px 0;
+        }
+        .btn-exe{
+            flex:1;
+            min-width:220px;
+            display:inline-block;
+            text-align:center;
+            padding:14px 24px;
+            background:#406bff;
+            color:#fff;
+            border-radius:10px;
+            text-decoration:none;
+            font-size:17px;
+            font-weight:600;
+            transition:0.2s;
+        }
+        .btn-exe:hover{
+            background:#2b52dd;
+        }
+        .cmd-box{
+            flex:1;
+            min-width:280px;
+            background:#0e0e13;
+            border:1px solid #2c2c3b;
+            border-radius:10px;
+            padding:14px 16px;
+            position:relative;
+        }
+        .cmd-label{
+            font-size:13px;
+            color:#888899;
+            margin-bottom:8px;
+        }
+        .cmd-code{
+            font-family:Consolas,monospace;
+            font-size:14px;
+            color:#72d088;
+            word-break:break-all;
+        }
+        .copy-btn{
+            position:absolute;
+            right:12px;
+            bottom:12px;
+            padding:4px 10px;
+            background:#272738;
+            border:none;
+            color:#ddd;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:13px;
+        }
+        .copy-btn:hover{
+            background:#38384e;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-title">Xun<span>Claw</span> · 绒玻璃</div>
+        <a class="download-btn-header" href="https://xcsyweb.pages.dev/XunClawInstall1.0.exe">64下载</a>
+    </header>
+
+    <main>
+        <h1>XunClaw</h1>
+        <p class="sub-desc">对标 Open‑Claw，绒玻璃出品 Windows x64 底层工具，支持安装包下载与命令行部署</p>
+
+        <h2 class="section-title">工具简介</h2>
+        <div class="intro-block">
+            <p>XunClaw 是面向 Windows 的底层调试工具，参考 Open‑Claw 设计思路，用于进程操作、系统信息读取等场景。提供两种获取方式：EXE 图形化安装包，以及 CMD 一键部署命令。</p>
+            <ul>
+                <li>版本：v1.0</li>
+                <li>目标平台：Windows 64位</li>
+                <li>方式：安装程序 / CMD 命令部署</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">获取 XunClaw</h2>
+        <div class="download-wrap">
+            <a class="btn-exe" href="https://xcsyweb.pages.dev/XunClawInstall1.0.exe">下载 EXE 安装包</a>
+            <div class="cmd-box">
+                <div class="cmd-label">CMD 一键下载命令（点击复制）</div>
+                <div class="cmd-code" id="cmdText">powershell -Command "Invoke‑WebRequest -Uri 'https://xcsyweb.pages.dev/XunClawInstall1.0.exe' -OutFile '$env:TEMP\XunClawInstall1.0.exe'; Start‑Process '$env:TEMP\XunClawInstall1.0.exe'"</div>
+                <button class="copy-btn" onclick="copyCmd()">复制</button>
+            </div>
+        </div>
+    </main>
+
+<script>
+function copyCmd(){
+    const text = document.getElementById('cmdText').innerText;
+    navigator.clipboard.writeText(text);
+    alert("命令已复制，直接粘贴到CMD/PowerShell运行");
+}
+</script>
+</body>
+</html>
