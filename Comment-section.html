@@ -1,1 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XunClaw - 评论区</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #11131b;
+            color: #e6e8f0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 15% 12%, rgba(90,130,255,0.12) 0%, transparent 32%),
+                radial-gradient(circle at 85% 75%, rgba(70,110,220,0.09) 0%, transparent 35%);
+            padding:32px 16px;
+        }
+        .container{
+            max-width:820px;
+            margin:0 auto;
+        }
+        .back-link{
+            display:inline-block;
+            color:#73a0ff;
+            text-decoration:none;
+            margin-bottom:24px;
+            font-size:18px;
+        }
+        .user-status-bar{
+            margin-bottom:20px;
+            display:flex;
+            gap:12px;
+            align-items:flex-start;
+            flex-direction:column;
+        }
+        .user-base-info{
+            display:flex;
+            flex-direction:column;
+            gap:4px;
+        }
+        .uid-text{
+            font-size:13px;
+            color:#8286a0;
+        }
+        .edit-nick{
+            color:#73a0ff;
+            cursor:pointer;
+            text-decoration:underline;
+        }
+        .glass-card {
+            background: rgba(28,30,44,0.52);
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:12px;
+            padding:22px 24px;
+            box-shadow:0 8px 30px rgba(0,0,0,0.24);
+            margin-bottom:24px;
+        }
+        .section-title{
+            font-size:20px;
+            margin-bottom:16px;
+            color:#fff;
+        }
+        /* 昵称设置弹窗 */
+        .nick-modal{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.75);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:9999;
+        }
+        .nick-box{
+            background:#1c1e2c;
+            border:1px solid rgba(255,255,255,0.09);
+            border-radius:12px;
+            padding:26px;
+            width:min(90vw,420px);
+        }
+        .nick-box h3{
+            margin-bottom:12px;
+        }
+        .nick-input{
+            width:100%;
+            padding:12px 12px;
+            background:#141622;
+            border:1px solid rgba(255,255,255,0.09);
+            border-radius:8px;
+            color:#e6e8f0;
+            font-size:16px;
+            margin-bottom:14px;
+        }
+        .btn-primary{
+            width:100%;
+            min-height:44px;
+            padding:9px 18px;
+            background:#426cf8;
+            color:#fff;
+            border:none;
+            border-radius:7px;
+            cursor:pointer;
+            font-weight:600;
+            font-size:16px;
+        }
+        .btn-primary:hover{
+            background:#2c54dd;
+        }
+        textarea{
+            width:100%;
+            min-height:90px;
+            padding:12px;
+            background:#141622;
+            border:1px solid rgba(255,255,255,0.09);
+            border-radius:8px;
+            color:#e6e8f0;
+            font-size:16px;
+            resize:vertical;
+            margin-bottom:12px;
+        }
+        .btn-small{
+            min-height:44px;
+            padding:8px 14px;
+            border-radius:6px;
+            border:none;
+            cursor:pointer;
+            font-size:14px;
+        }
+        .btn-submit{
+            background:#426cf8;
+            color:#fff;
+        }
+        .btn-reply{
+            background:#272a3f;
+            color:#d0d2e6;
+            margin-right:8px;
+        }
+        .btn-del{
+            background:#882e38;
+            color:#fff;
+        }
+        .comment-item{
+            padding:16px 0;
+            border-bottom:1px solid rgba(255,255,255,0.06);
+        }
+        .comment-item:last-child{
+            border-bottom:none;
+        }
+        .comment-header{
+            display:flex;
+            gap:10px;
+            align-items:center;
+            margin-bottom:8px;
+            flex-wrap:wrap;
+        }
+        .nick-name{
+            font-weight:600;
+            color:#fff;
+        }
+        .tag-admin{
+            color:#70d888;
+            font-size:12px;
+            border:1px solid #70d888;
+            padding:1px 6px;
+            border-radius:4px;
+        }
+        .tag-material{
+            color:#ffbc52;
+            font-size:12px;
+            border:1px solid #ffbc52;
+            padding:1px 6px;
+            border-radius:4px;
+        }
+        .tag-guest{
+            color:#a4a8c0;
+            font-size:12px;
+            border:1px solid #a4a8c0;
+            padding:1px 6px;
+            border-radius:4px;
+        }
+        .time-text{
+            font-size:12px;
+            color:#8286a0;
+        }
+        .comment-content{
+            color:#c5c8e0;
+            line-height:1.7;
+            margin-bottom:10px;
+        }
+        .reply-wrap{
+            margin-left:28px;
+            border-left:1px solid rgba(255,255,255,0.08);
+            padding-left:14px;
+            margin-top:10px;
+        }
+        .reply-item{
+            padding:10px 0;
+            border-bottom:1px solid rgba(255,255,255,0.04);
+        }
+        .reply-item:last-child{
+            border-bottom:none;
+        }
+        .reply-box{
+            margin-top:10px;
+        }
+        .hidden{
+            display:none !important;
+        }
+        /* 页面内切换身份按钮，不用F12 */
+        .debug-bar{
+            margin-bottom:16px;
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a class="back-link" href="./index.html">← 返回首页</a>
 
+    <!-- 页面内置切换身份按钮，禁止F12操作 -->
+    <div class="debug-bar">
+        <button class="btn-small btn-submit" onclick="setAdmin()">设置我为管理员(DaiXunXun)</button>
+        <button class="btn-small btn-reply" onclick="setGuest()">切换访客模式</button>
+        <button class="btn-small btn-del" onclick="clearAllData()">清空本地全部数据</button>
+    </div>
+
+    <div class="user-status-bar">
+        <div class="user-base-info">
+            <span id="showNick"></span>
+            <span class="uid-text" id="showUid"></span>
+            <span id="showTag"></span>
+        </div>
+        <span class="edit-nick hidden" id="editNickBtn" onclick="openNickModal()">修改昵称</span>
+    </div>
+
+    <div class="glass-card">
+        <h2 class="section-title">用户评论区</h2>
+        <div id="publishArea">
+            <textarea id="commentInput" placeholder="写下你的评论..."></textarea>
+            <button class="btn-small btn-submit" onclick="postComment()">发表评论</button>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <div id="commentList"></div>
+    </div>
+</div>
+
+<!-- 设置昵称弹窗 -->
+<div id="nickModal" class="nick-modal hidden" onclick="closeNickModalByMask(event)">
+    <div class="nick-box" onclick="event.stopPropagation()">
+        <h3>设置你的昵称</h3>
+        <input class="nick-input" id="nickInput" placeholder="输入昵称">
+        <button class="btn-primary" onclick="saveNick()">确认</button>
+    </div>
+</div>
+
+<script>
+//==================== 顶层配置区 ====================
+const adminUidList = ["DaiXunXun","wlr","dwl"];
+const materialAdminUidList = ["DaiXunXun","wlr","dwl"];
+//====================================================
+
+const STORAGE_UID = "xc_uid";
+const STORAGE_NICK = "xc_nickname";
+const STORAGE_COMMENTS = "xc_comments_data";
+
+//UID直接读取字符串，不再Number转换
+let myUid = localStorage.getItem(STORAGE_UID) || "0";
+let myNick = localStorage.getItem(STORAGE_NICK) || "";
+
+//身份判断
+function isSuperAdmin(uid){
+    if(!uid || uid === "0") return false;
+    return adminUidList.includes(uid);
+}
+function isMaterialAdmin(uid){
+    if(!uid || uid === "0") return false;
+    return materialAdminUidList.includes(uid);
+}
+function hasAdminPermission(uid){
+    return isSuperAdmin(uid) || isMaterialAdmin(uid);
+}
+
+//内置页面按钮，不用F12控制台
+function setAdmin(){
+    localStorage.setItem(STORAGE_UID,"DaiXunXun");
+    myUid = "DaiXunXun";
+    renderUserStatus();
+    renderComments();
+    alert("已切换管理员身份：DaiXunXun");
+}
+function setGuest(){
+    localStorage.setItem(STORAGE_UID,"0");
+    myUid = "0";
+    renderUserStatus();
+    renderComments();
+    alert("已切换访客身份");
+}
+function clearAllData(){
+    localStorage.removeItem(STORAGE_UID);
+    localStorage.removeItem(STORAGE_NICK);
+    localStorage.removeItem(STORAGE_COMMENTS);
+    myUid = "0";
+    myNick = "";
+    renderUserStatus();
+    renderComments();
+    alert("本地数据全部清空");
+}
+
+//初始化
+(function init(){
+    try{
+        renderUserStatus();
+        renderComments();
+    }catch(e){
+        console.error("初始化异常：",e);
+    }
+})();
+
+function openNickModal(){
+    try{
+        if(!hasAdminPermission(myUid)){
+            alert("非管理员账号不允许修改昵称");
+            return;
+        }
+        document.getElementById("nickModal").classList.remove("hidden");
+        document.getElementById("nickInput").value = myNick;
+    }catch(e){
+        console.error("打开昵称弹窗异常",e);
+    }
+}
+function closeNickModal(){
+    document.getElementById("nickModal").classList.add("hidden");
+}
+function closeNickModalByMask(e){
+    if(e.target.id === "nickModal") closeNickModal();
+}
+
+function saveNick(){
+    try{
+        const val = document.getElementById("nickInput").value.trim();
+        if(!val){ alert("昵称不能为空"); return; }
+        myNick = val;
+        localStorage.setItem(STORAGE_NICK, myNick);
+        closeNickModal();
+        renderUserStatus();
+        renderComments();
+    }catch(e){
+        console.error("保存昵称异常",e);
+    }
+}
+
+//渲染用户状态栏
+function renderUserStatus(){
+    try{
+        const elNick = document.getElementById("showNick");
+        const elUid = document.getElementById("showUid");
+        const elTag = document.getElementById("showTag");
+        const editBtn = document.getElementById("editNickBtn");
+        if(!elNick||!elUid||!elTag||!editBtn) return;
+
+        elNick.innerText = myNick || "未设置昵称";
+        elUid.innerText = `UID: ${myUid}`;
+
+        if(hasAdminPermission(myUid)){
+            editBtn.classList.remove("hidden");
+        }else{
+            editBtn.classList.add("hidden");
+        }
+
+        let tagHtml = "";
+        if(isSuperAdmin(myUid)){
+            tagHtml = `<span class="tag-admin">管理员</span>`;
+        }else if(isMaterialAdmin(myUid)){
+            tagHtml = `<span class="tag-material">材料管理员</span>`;
+        }else{
+            tagHtml = `<span class="tag-guest">访客</span>`;
+        }
+        elTag.innerHTML = tagHtml;
+    }catch(e){
+        console.error("渲染用户状态栏异常",e);
+    }
+}
+
+//获取评论
+function getComments(){
+    const raw = localStorage.getItem(STORAGE_COMMENTS);
+    if(!raw) return [];
+    return JSON.parse(raw);
+}
+function saveComments(arr){
+    localStorage.setItem(STORAGE_COMMENTS, JSON.stringify(arr));
+}
+
+//发表主评论
+function postComment(){
+    try{
+        const text = document.getElementById("commentInput").value.trim();
+        if(!text) return;
+        const arr = getComments();
+        arr.push({
+            id: Date.now(),
+            uid:myUid,
+            nick: myNick,
+            content: text,
+            time: new Date().toLocaleString(),
+            replies:[]
+        });
+        saveComments(arr);
+        document.getElementById("commentInput").value = "";
+        renderComments();
+    }catch(e){
+        console.error("发表评论异常",e);
+    }
+}
+
+//回复
+function postReply(commentId){
+    try{
+        const text = document.getElementById("reply-"+commentId).value.trim();
+        if(!text) return;
+        const arr = getComments();
+        const idx = arr.findIndex(x=>x.id === commentId);
+        if(idx === -1) return;
+        arr[idx].replies.push({
+            rid: Date.now(),
+            uid:myUid,
+            nick: myNick,
+            content:text,
+            time: new Date().toLocaleString()
+        });
+        saveComments(arr);
+        renderComments();
+    }catch(e){
+        console.error("回复评论异常",e);
+    }
+}
+
+//删除主评论
+function delComment(cid,nickname){
+    if(!confirm(`确定删除「${nickname}」的这条评论？`)) return;
+    const arr = getComments();
+    const item = arr.find(x=>x.id === cid);
+    if(!item) return;
+    if(!hasAdminPermission(myUid) && item.uid !== myUid){
+        alert("你无权删除该评论");
+        return;
+    }
+    const newArr = arr.filter(x=>x.id !== cid);
+    saveComments(newArr);
+    renderComments();
+}
+
+//删除回复
+function delReply(cid, rid,nickname){
+    if(!confirm(`确定删除「${nickname}」的这条回复？`)) return;
+    const arr = getComments();
+    const idx = arr.findIndex(x=>x.id === cid);
+    if(idx === -1) return;
+    const replyItem = arr[idx].replies.find(r=>r.rid === rid);
+    if(!replyItem) return;
+    if(!hasAdminPermission(myUid) && replyItem.uid !== myUid){
+        alert("你无权删除这条回复");
+        return;
+    }
+    arr[idx].replies = arr[idx].replies.filter(r=>r.rid !== rid);
+    saveComments(arr);
+    renderComments();
+}
+
+//展开回复输入框
+function toggleReplyBox(id){
+    const el = document.getElementById("replyBox-"+id);
+    el.classList.toggle("hidden");
+}
+
+//渲染全部评论
+function renderComments(){
+    try{
+        const arr = getComments();
+        const wrap = document.getElementById("commentList");
+        if(!wrap) return;
+        if(arr.length === 0){
+            wrap.innerHTML = "<div style='color:#a4a8c0;text-align:center;padding:20px'>暂无评论，快来发表第一条</div>";
+            return;
+        }
+        let html = "";
+        arr.forEach(cm=>{
+            const cuid = cm.uid||"0";
+            const isMine = cuid === myUid;
+            const amAdmin = hasAdminPermission(myUid);
+            const canDel = amAdmin || isMine;
+
+            let userTag = "";
+            if(isSuperAdmin(cuid)){
+                userTag = `<span class="tag-admin">管理员</span>`;
+            }else if(isMaterialAdmin(cuid)){
+                userTag = `<span class="tag-material">材料管理员</span>`;
+            }else{
+                userTag = `<span class="tag-guest">访客</span>`;
+            }
+
+            html += `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="nick-name">${escapeHtml(cm.nick)}</span>
+                    ${userTag}
+                    <span class="time-text">${escapeHtml(cm.time)}</span>
+                    ${canDel ? `<button class="btn-small btn-del" onclick="delComment(${cm.id},'${escapeHtml(cm.nick)}')">删除${escapeHtml(cm.nick)}的评论</button>` : ""}
+                </div>
+                <div class="comment-content">${escapeHtml(cm.content)}</div>
+                <button class="btn-small btn-reply" onclick="toggleReplyBox(${cm.id})">回复</button>
+
+                <div id="replyBox-${cm.id}" class="reply-box hidden">
+                    <textarea id="reply-${cm.id}" placeholder="写下回复..."></textarea>
+                    <button class="btn-small btn-submit" onclick="postReply(${cm.id})">提交回复</button>
+                </div>
+
+                <div class="reply-wrap">
+            `;
+            cm.replies.forEach(rp=>{
+                const ruid = rp.uid||"0";
+                const rpMine = ruid === myUid;
+                const rpCanDel = amAdmin || rpMine;
+
+                let rpTag = "";
+                if(isSuperAdmin(ruid)){
+                    rpTag = `<span class="tag-admin">管理员</span>`;
+                }else if(isMaterialAdmin(ruid)){
+                    rpTag = `<span class="tag-material">材料管理员</span>`;
+                }else{
+                    rpTag = `<span class="tag-guest">访客</span>`;
+                }
+                html += `
+                <div class="reply-item">
+                    <div class="comment-header">
+                        <span class="nick-name">${escapeHtml(rp.nick)}</span>
+                        ${rpTag}
+                        <span class="time-text">${escapeHtml(rp.time)}</span>
+                        ${rpCanDel ? `<button class="btn-small btn-del" onclick="delReply(${cm.id},${rp.rid},'${escapeHtml(rp.nick)}')">删除${escapeHtml(rp.nick)}的回复</button>`:""}
+                    </div>
+                    <div class="comment-content">${escapeHtml(rp.content)}</div>
+                </div>
+                `;
+            });
+            html += `</div></div>`;
+        });
+        wrap.innerHTML = html;
+    }catch(e){
+        console.error("渲染评论异常",e);
+    }
+}
+
+//XSS简单转义
+function escapeHtml(str){
+    if(!str) return "";
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+</script>
+</body>
+</html>
