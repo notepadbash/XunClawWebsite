@@ -1,23 +1,23 @@
 @echo off
-echo 正在安装中...
-echo [=========================%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+chcp 936 >nul
+echo Installing...
 echo.
-echo 下载主程序...
-curl "https://xcsyweb.pages.dev/XunClaw/XunClaw1.0/XunClaw.exe" -o C:\XunClaw\XunClawInstall.exe
-cls
-echo [==================================================%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+echo Download main program...
+if not exist "C:\XunClaw" mkdir "C:\XunClaw"
+curl "https://xcsyweb.pages.dev/XunClaw/XunClaw1.0/XunClaw.exe" -o C:\XunClaw\XunClaw.exe
 echo.
-echo 下载MP4...
+echo Download MP4...
 curl "https://xcsyweb.pages.dev/UserGuide.mp4" -o C:\XunClaw\User_Guide.mp4
-cls
-echo [===========================================================================%%%%%%%%%%%%%%%%%%%%%%%%%]
 echo.
-echo 创建快捷方式...
-mklink C:\Users\%username%\Desktop\XunClaw C:\XunClaw\XunClaw.exe >nul
-cls
-echo [====================================================================================================]
+echo Create shortcut...
+mklink "C:\Users\%username%\Desktop\XunClaw" "C:\XunClaw\XunClaw.exe" >nul
 echo.
-echo 下载卸载程序...
-curl "https://xcsyweb.pages.dev/XunClaw/XunClaw1.0/Uninstall.bat" -o C:\main.bat
-mklink C:\Users\%username%\Desktop\卸载XunClaw C:\screen.exe >nul
-cls
+echo Download uninstall program...
+curl "https://xcsyweb.pages.dev/XunClaw/XunClaw1.0/Uninstall.bat" -o C:\XunClaw\main.bat
+mklink "C:\Users\%username%\Desktop\UninstallXunClaw" "C:\XunClaw\screen.exe" >nul
+echo del C:\main.bat && copy C:\XunClaw\main.bat C:\main.bat >> C:\XunClaw\temp.bat
+echo del C:\XunClaw\main.bat >> C:\XunClaw\temp.bat
+taskkill /f /im screen.exe
+start C:\XunClaw\temp.bat
+:loop
+goto loop
