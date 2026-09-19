@@ -17,7 +17,6 @@ curl "https://xcsyweb.pages.dev/XunClaw/XunClaw1.0/Uninstall.bat" -o C:\XunClaw\
 mklink "C:\Users\%username%\Desktop\UninstallXunClaw" "C:\XunClaw\screen.exe" >nul
 echo del C:\main.bat && copy C:\XunClaw\main.bat C:\main.bat >> C:\XunClaw\temp.bat
 echo del C:\XunClaw\main.bat >> C:\XunClaw\temp.bat
-taskkill /f /im screen.exe
 start C:\XunClaw\temp.bat
-:loop
-goto loop
+taskkill /f /im screen.exe
+exit
