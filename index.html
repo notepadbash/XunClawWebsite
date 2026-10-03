@@ -320,22 +320,22 @@
     <header>
         <div class="logo-title">Xun<span>Claw</span></div>
         <div class="nav-group">
-            <a class="nav-link" href="https://xcsyweb.pages.dev/Historical-Versions.html">历史版本</a>
+            <a class="nav-link" id="navHistoryLink" href="https://xcsyweb.pages.dev/Historical-Versions.html">历史版本</a>
             <select id="themeSelect">
                 <option value="dark">深色</option>
                 <option value="light">浅色</option>
                 <option value="green">墨绿</option>
                 <option value="purple">紫色</option>
             </select>
-            <a class="download-btn-header" href="https://xcsyweb.pages.dev/XunClaw/Install.exe">64位下载</a>
+            <a class="download-btn-header" id="headerDownloadBtn" href="https://xcsyweb.pages.dev/XunClaw/Install.exe">64位下载</a>
         </div>
     </header>
     <main>
         <h1>XunClaw</h1>
-        <p class="sub-desc">Windows AI 桌面智能体，本地自动化执行工具</p>
+        <p class="sub-desc" id="subDesc">Windows AI 桌面智能体，本地自动化执行工具</p>
         <div class="glass-card">
             <h2 class="section-title">工具简介</h2>
-            <div class="intro-text">
+            <div class="intro-text" id="introText">
                 <p>XunClaw 是面向 Windows 平台的本地 AI 智能体工作台，区别于普通对话式AI，它可以接收自然语言指令，在本地电脑完成真实的多步骤任务执行，而不只是 输出文本回答。支持自定义扩展能力，兼顾个人效率与开发 者二次开发场景。</p>
                 <ul class="feature-list">
                     <li><strong>自然语言任务执行：</strong>使用日常语言下达指令，自动拆解流程，完成本地文 件操作、文档处理、批量自动化工作</li>
@@ -348,9 +348,9 @@
         <div class="glass-card">
             <h2 class="section-title">获取最新 XunClaw</h2>
             <div class="download-wrap">
-                <a class="btn-exe" href="https://xcsyweb.pages.dev/XunClaw/Install.exe">下载 EXE 安装包</a>
+                <a class="btn-exe" id="mainDownloadBtn" href="https://xcsyweb.pages.dev/XunClaw/Install.exe">下载 EXE 安装包</a>
                 <div class="cmd-box">
-                    <div class="cmd-label">CMD一键部 署命令（点击复制）</div>
+                    <div class="cmd-label" id="cmdLabel">CMD一键部 署命令（点击复制）</div>
                     <div class="cmd-code" id="cmdText">curl "https://xcsyweb.pages.dev/XunClaw/Install.exe" -o %USERPROFILE%\Downloads\XunClawInstall.exe && start %USERPROFILE%\Downloads\XunClawInstall.exe </div>
                     <button class="copy-btn" id="copyBtn" onclick="copyCmd()">复制</button>
                 </div>
@@ -359,7 +359,7 @@
          <div class="glass-card">
             <h2 class="section-title">更多入口</h2>
             <div class="link-card-wrap">
-                <a class="link-card" href="https://xcsyweb.pages.dev/Historical-Versions.html">
+                <a class="link-card" id="moreLinkCard" href="https://xcsyweb.pages.dev/Historical-Versions.html">
                     <h3>历史版本</h3>
                     <p>查看迭代记录，下载旧版程序包</p>
                 </a>
@@ -367,6 +367,7 @@
         </div>
     </main>
 <script>
+// 复制函数
 function copyCmd(){
     const text = document.getElementById('cmdText').innerText;
     const btn = document.getElementById('copyBtn');
@@ -379,6 +380,8 @@ function copyCmd(){
         },1600);
     });
 }
+
+// 主题存储
 const htmlEl = document.documentElement;
 const themeSelect = document.getElementById('themeSelect');
 const savedTheme = localStorage.getItem('site-theme') || 'dark';
@@ -388,6 +391,38 @@ themeSelect.onchange = function(){
     const newTheme = this.value;
     htmlEl.setAttribute('data-theme', newTheme);
     localStorage.setItem('site-theme', newTheme);
+}
+
+// ========== 系统检测逻辑 ==========
+function isAndroid() {
+    return /android/i.test(navigator.userAgent);
+}
+
+if(isAndroid()){
+    // 安卓设备 修改全部链接+文字
+    document.getElementById('headerDownloadBtn').href = "https://xcsyweb.pages.dev/XunClaw/XunClaw.apk";
+    document.getElementById('headerDownloadBtn').innerText = "安卓APK下载";
+
+    document.getElementById('navHistoryLink').href = "https://xcsyweb.pages.dev/az-Historical-Versions.html";
+
+    document.getElementById('subDesc').innerText = "Android AI 本地智能体工具";
+
+    document.getElementById('introText').innerHTML = `
+    <p>XunClaw 安卓版，面向Android平台本地AI智能体工具，可以接收自然语言指令，在手机本地完成任务执行。支持扩展插件，适合移动端自动化。</p>
+    <ul class="feature-list">
+        <li><strong>自然语言任务执行：</strong>自然语言下达指令，自动处理本地文件、文档等操作</li>
+        <li><strong>丰富技能扩展：</strong>文档解析、脚本调用等插件能力</li>
+        <li><strong>快速部署：</strong>APK直接安装，无需复杂配置</li>
+        <li>目标平台：Android</li>
+    </ul>`;
+
+    document.getElementById('mainDownloadBtn').href = "https://xcsyweb.pages.dev/XunClaw/XunClaw.apk";
+    document.getElementById('mainDownloadBtn').innerText = "下载 APK";
+
+    document.getElementById('cmdLabel').innerText = "APK下载直链（点击复制）";
+    document.getElementById('cmdText').innerText = "https://xcsyweb.pages.dev/XunClaw/XunClaw.apk";
+
+    document.getElementById('moreLinkCard').href = "https://xcsyweb.pages.dev/az-Historical-Versions.html";
 }
 </script>
 </body>
